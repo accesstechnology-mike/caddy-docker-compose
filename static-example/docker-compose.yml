@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+
+  alpine:
+    image: alpine:latest 
+    container_name: alpine
+    restart: unless-stopped
+    tty: true
+    networks:
+      - caddy
+    labels:
+      caddy: alpine.accesstechnology.co.uk
+      caddy.root: "* $PWD/public"
+      caddy.file_server:
+#Docker Networks
+networks:
+  caddy: 
+    external: true
