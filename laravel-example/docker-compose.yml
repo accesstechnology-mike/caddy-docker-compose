@@ -12,11 +12,11 @@ services:
     working_dir: /var/www
     volumes:
       - ./:/var/www
-      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - caddy
+      - app-network
     labels:
-      caddy: ${APP_NAME}.accesstechnology.co.uk
+      caddy: ${APP_URL}
       caddy.root: "* $PWD/public"
       caddy.php_fastcgi: "{{upstreams 9000}}"
       caddy.php_fastcgi.root: /var/www/public
@@ -25,7 +25,30 @@ services:
       # remove the following line when you have verified your setup
       # Otherwise you risk being rate limited by let's encrypt
       caddy.tls.ca: https://acme-staging-v02.api.letsencrypt.org/directory
+
+  db:
+    image: mariadb
+    container_name: ${APP_NAME}-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - ${DOCKER_DB_PORT}:3306
+    environment:
+      MYSQL_DATABASE: ${APP_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - app-network
+    volumes:
+      - sql:/var/lib/mysql
+
 #Docker Networks
 networks:
   caddy:
     external: true
+  app-network:
+    name: ${APP_NAME}-network
+volumes:
+  sql:
+    name: ${APP_NAME}-sql
