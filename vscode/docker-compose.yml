@@ -1,0 +1,18 @@
+version: "2.1"
+services:
+  code-server:
+    image: ghcr.io/linuxserver/code-server
+    container_name: code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - PASSWORD=password #optional
+      -     DOCKER_MODS=linuxserver/mods:universal-git|linuxserver/mods:code-server-docker|linuxserver/mods:code-server-zsh|linuxserver/mods:code-server-php|linuxserver/mods:code-server-nodejs|linuxserver/mods:code-server-npmglobal
+    volumes:
+      - /home/mike/vscode/config:/config
+     # - /home/mike/CODE:/config/
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8443:8443
+    restart: unless-stopped
