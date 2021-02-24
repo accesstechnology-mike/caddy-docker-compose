@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - ${DOCKER_DB_PORT}:3306
+      - ${DB_DOCKER_PORT}:3306
     environment:
       MYSQL_DATABASE: ${APP_NAME}
       MYSQL_USER: ${DB_USERNAME}
